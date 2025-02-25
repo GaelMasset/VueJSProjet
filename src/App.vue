@@ -2,17 +2,28 @@
 import { ref } from "vue";
 
 const texte = ref("chalutmeau croisés");
+const trimedText = texte.value.trim();
 const postes = ref([]);
 
 function addPoste() {
-  postes.value.push(texte.value);
+  const nouveauPoste = {
+    id: Math.random().toString(36).substring(2),
+    content : texte.value,
+    createdAt: new Date(),
+    author:{
+      username: "phasme",
+      avatarUtl: "phasme.jpeg"
+    }
+  }
+
+  postes.value.push(nouveauPoste);
   texte.value = "";
 }
 </script>
 
 <template>
   <h1>NOUS ALLONS DETRUIRE LE MONDE</h1>
-  <h2>Je ne veux pas mourir ...💧</h2>
+  <h2>Je ne veux pas mourir ...😥</h2>
   <h3>C'est une blague</h3>
   <h6>Tout le monde est mort.🚗🚐🚌🚌🚛🚛🚛🚛🚛🚛</h6>
 
@@ -23,9 +34,16 @@ function addPoste() {
       <form class="card" @submit.prevent="addPoste">
         <h1>Chalut le formulaire</h1>
         <textarea name="post" id="post" placeholder="Tu veux quoi wsh ?" v-model="texte"></textarea>
-        <button>Envoie.</button>
+        <button :disabled="!texte.length">Envoie.</button>
       </form>
-      <p v-for="(poste, index) in postes" :key="index">{{ poste }}</p>
+
+      <p v-if="!postes.length">Il n'y a aucun post... mets en un ***</p>
+
+      <article  v-for="(poste, index) in postes" :key="index">
+        <img :src="poste.author.avatarUtl" alt="avatar" width="36" height="36" class="image">
+        <a> {{ poste.author.username }}</a>
+        <p>{{ poste.content }}</p>
+      </article>
     </div>
   </main>
 </template>
@@ -72,4 +90,30 @@ button {
   height: 40px;
   padding: 0 1rem;
 }
+button:disabled{
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+article{
+  padding: 0.75rem 1.5rem; 
+  overflow: hidden;
+  background-color: rgba(216, 226, 172, 0.5);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+article p{
+  background-color: rgb(129, 66, 23);
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  color: rgb(194, 165, 165);
+}
+
+.image{
+  border-radius: 50%;
+  object-fit: cover;
+
+}
+
 </style>
